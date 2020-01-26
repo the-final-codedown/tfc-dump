@@ -1,0 +1,22 @@
+version: "3"
+services:
+  tfc-dump:
+    build: ../tfc-dump
+    ports:
+      - 8084:8084
+    tty: true
+    links:
+      - mongodb
+    environment:
+      - DB_HOST=mongodb
+    networks:
+      - backend
+  mongodb:
+    image: mongo:4.2.2-bionic
+    container_name: "mongodb"
+    ports:
+      - 27017:27017
+    networks:
+      - backend
+networks:
+  backend:
