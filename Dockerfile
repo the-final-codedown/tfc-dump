@@ -1,4 +1,6 @@
-FROM alexisgra/falcon-alpine-python-3.7.4:latest
+FROM python:3.8.1-alpine3.11
+
+RUN pip install --no-cache-dir falcon gunicorn
 
 ADD dump.py ./
 
