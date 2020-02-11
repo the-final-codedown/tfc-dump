@@ -33,9 +33,9 @@ class DumpController(object):
         transactions = requests.get(DumpInfo.account_url + '/transactions')
         profiles = requests.get(DumpInfo.profile_url + '/profiles')
         for profile in profiles.json():
-            accountsFiltered = getAccounts(savingsAccount.json(), profile['_id']) + getAccounts(checksAccount.json(),
-                                                                                                profile['_id'])
-            result += profile['_id'] + '   ' + str(len(accountsFiltered)) + ' Accounts\n'
+            accountsFiltered = getAccounts(savingsAccount.json(), profile['email']) + getAccounts(checksAccount.json(),
+                                                                                                  profile['email'])
+            result += profile['email'] + '   ' + str(len(accountsFiltered)) + ' Accounts\n'
             for account in accountsFiltered:
                 result += ' accountId : ' + account['accountId'] + '\n'
                 transactionsFiltered = getTransactions(transactions.json(), account['accountId'])
