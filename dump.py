@@ -1,3 +1,4 @@
+import datetime
 import falcon
 import requests
 
@@ -9,9 +10,15 @@ class DumpInfo:
 
 def getTransactions(transactions, accountId):
     print(accountId)
+    print(transactions)
     transactionsFiltered = []
+    transactions.sort(key=lambda r: datetime.datetime.strptime(r["date"], '%Y-%m-%dT%H:%M:%S'), reverse=True)
+    print(transactions)
+    i = 0
     for transaction in transactions:
+        if i >= 10: break
         if transaction['source'] == accountId or transaction['receiver'] == accountId:
+            i = i + 1
             transactionsFiltered.append(transaction)
     return transactionsFiltered
 
