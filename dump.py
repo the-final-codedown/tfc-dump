@@ -9,6 +9,8 @@ class DumpInfo:
 
 
 def getTransactions(transactions, accountId):
+    if not transactions:
+        return []
     print(accountId)
     print(transactions)
     transactionsFiltered = []
