@@ -52,16 +52,16 @@ class DumpController(object):
                                                                                                 profile['_id'])
             result += profile['_id'] + '   ' + str(len(accountsFiltered)) + ' Accounts\n'
             for account in accountsFiltered:
-                result += ' accountId : ' + account['accountId'] + '\n'
+                result += ' account : ' + account['accountId'] + '\n'
                 transactionsFiltered = getTransactions(transactions.json(), account['accountId'])
                 result += '   Money : ' + str(account['money']) + '   transaction : ' + str(
                     len(transactionsFiltered)) + '\n\n'
                 for transaction in transactionsFiltered:
-                    result += '     transactionId : '
+                    result += '     transaction : '
                     if transaction['source'] == account['accountId']:
-                        result += transaction['source'] + ' - ' + str(transaction['amount']) + '\n'
+                        result += transaction['receiver'] + ' - ' + str(transaction['amount']) + '\n'
                     elif transaction['receiver'] == account['accountId']:
-                        result += transaction['receiver'] + ' + ' + str(transaction['amount']) + '\n'
+                        result += transaction['source'] + ' + ' + str(transaction['amount']) + '\n'
                 result += '\n'
         resp.body = result
         resp.status = falcon.HTTP_200
