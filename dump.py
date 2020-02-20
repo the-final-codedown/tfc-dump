@@ -11,10 +11,13 @@ class DumpInfo:
 def getTransactions(transactions, accountId):
     if not transactions:
         return []
+    for transaction in transactions:
+        if '.' not in transaction["date"]:
+            transaction["date"] = transaction["date"] + '.0'
     print(accountId)
     print(transactions)
     transactionsFiltered = []
-    transactions.sort(key=lambda r: datetime.datetime.strptime(r["date"], '%Y-%m-%dT%H:%M:%S'), reverse=True)
+    transactions.sort(key=lambda r: datetime.datetime.strptime(r["date"], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)
     print(transactions)
     i = 0
     for transaction in transactions:
