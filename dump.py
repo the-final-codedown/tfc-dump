@@ -1,3 +1,4 @@
+import datetime
 import falcon
 import requests
 
@@ -8,10 +9,21 @@ class DumpInfo:
 
 
 def getTransactions(transactions, accountId):
-    print(accountId)
-    transactionsFiltered = []
+    if not transactions:
+        return []
     for transaction in transactions:
+        if '.' not in transaction["date"]:
+            transaction["date"] = transaction["date"] + '.0'
+    print(accountId)
+    print(transactions)
+    transactionsFiltered = []
+    transactions.sort(key=lambda r: datetime.datetime.strptime(r["date"], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)
+    print(transactions)
+    i = 0
+    for transaction in transactions:
+        if i >= 10: break
         if transaction['source'] == accountId or transaction['receiver'] == accountId:
+            i = i + 1
             transactionsFiltered.append(transaction)
     return transactionsFiltered
 
@@ -40,16 +52,16 @@ class DumpController(object):
                                                                                                 profile['_id'])
             result += profile['_id'] + '   ' + str(len(accountsFiltered)) + ' Accounts\n'
             for account in accountsFiltered:
-                result += ' accountId : ' + account['accountId'] + '\n'
+                result += ' account : ' + account['accountId'] + '\n'
                 transactionsFiltered = getTransactions(transactions.json(), account['accountId'])
                 result += '   Money : ' + str(account['money']) + '   transaction : ' + str(
                     len(transactionsFiltered)) + '\n\n'
                 for transaction in transactionsFiltered:
-                    result += '     transactionId : '
+                    result += '     transaction : '
                     if transaction['source'] == account['accountId']:
-                        result += transaction['source'] + ' - ' + str(transaction['amount']) + '\n'
+                        result += transaction['receiver'] + ' - ' + str(transaction['amount']) + '\n'
                     elif transaction['receiver'] == account['accountId']:
-                        result += transaction['receiver'] + ' + ' + str(transaction['amount']) + '\n'
+                        result += transaction['source'] + ' + ' + str(transaction['amount']) + '\n'
                 result += '\n'
         resp.body = result
         resp.status = falcon.HTTP_200
